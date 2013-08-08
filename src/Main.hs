@@ -39,7 +39,8 @@ main = do
     conf <- cmdArgs conf0
     simpleHTTP nullConf{ port = httpPort conf } $ do
         decodeBody $ defaultBodyPolicy "/tmp/" 32000 1000 1000
-        let f = form0 (Just $ M.fromList [("H2PO4" :: String, 1.15e-3 :: Double),
+        let f = form0 (Just $ M.fromList [("H2O", 55),
+                                          ("H2PO4" :: String, 1.15e-3 :: Double),
                                           ("HPO4", 8.06e-3)],
                        Just charge,
                        Just kAs)

@@ -36,7 +36,10 @@ viewForm v = form v "/" $ do
      \ For the equilibrium data, the rows are specified as 'conjugate base' 'acid' pKa.\
      \ The actual names used are unimportant. \
      \ The davies equation is used the outer loop. Only one iteration seems to be necessary\
-     \ for values to stabilize (in this case ionic strength varying less than 0.001%)"
+     \ for values to stabilize (in this case ionic strength varying less than 0.001%)\
+     \ Water is included as an acid with the same convention for pKa as other acids: \
+     \ in other words the equation used is -pKa = log(OH) + log(H) - log(H2O) rather than\
+     \ the more usual -pKa = log(OH) + log(H)."
     H.table $ do
         H.tr $ do
             H.th "initial composition"
