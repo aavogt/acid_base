@@ -4,17 +4,6 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveDataTypeable #-}
-{- | TODO
-
-* fancy ajax (update on type?)
-
-* ghcjs
-
-* other activity coefficient models
-
-* what prints 7?
-
--}
 module Form 
     ( viewForm
     , c0Form
