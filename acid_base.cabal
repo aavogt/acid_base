@@ -16,7 +16,30 @@ cabal-version:       >=1.8
 
 executable acid_base
   main-is:             Main.hs
-  other-modules:       AcidBase
+  hs-source-dirs:      src
+
+  other-modules:       Tests
+
+                       Conf
+
+                       Main.PpKaEq
+                       Main.Aha
+                       Main.Instances
+
+                       Form
+                       Form.Parsers
+                       Form.Parsers.Internal
+
+                       AcidBase.KAs
+                       AcidBase.KaEqs
+                       AcidBase.Internal.Rejoins
+                       AcidBase.Internal.Davies
+                       AcidBase.Internal.Collect
+                       AcidBase.Internal.KaEqs
+                       AcidBase.Internal.Test
+                       AcidBase.Species
+                       AcidBase.Charge
+
   build-depends:       base ==4.6.*,
                        hmatrix ==0.15.*,
                        containers ==0.5.*,
@@ -25,7 +48,6 @@ executable acid_base
                        digestive-functors ==0.6.*,
                        digestive-functors-happstack ==0.6.*,
                        text ==0.11.*,
-                       applicative-quoters ==0.1.*,
                        digestive-functors-blaze ==0.6.*,
                        blaze-html == 0.6.*,
                        mtl ==2.1.*,
