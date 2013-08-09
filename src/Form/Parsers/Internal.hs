@@ -22,10 +22,10 @@ import Text.Digestive.Types (Result(Error, Success))
 import Text.Trifecta (noneOf, parseString, Result(Failure, Success), some, whiteSpace)
 import Text.Trifecta hiding (string, string, string)
 
+import Data.Maybe
 
 
-
-parsersToF from to x0 x = validateM (liftIO . parse2 from) (string (fmap (\y -> to (y `asTypeOf` x0)) x))
+parsersToF from to x = validateM (liftIO . parse2 from) (string (fmap to x))
 
 
 

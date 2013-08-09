@@ -54,4 +54,6 @@ executable acid_base
                        trifecta ==1.1.*,
                        process ==1.1.*,
                        tagsoup ==0.12.*,
-                       xhtml ==3000.2.*
+                       xhtml ==3000.2.*,
+                       data-default,
+                       lens == 3.9.*

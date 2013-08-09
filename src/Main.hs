@@ -18,9 +18,7 @@
 module Main 
     ( main
     ) where
-import AcidBase.Charge (charge)
-import AcidBase.KAs (kAs)
-import AcidBase.KaEqs (kaEqs)
+import AcidBase.Solve (solve, defaultProblem)
 import Conf (AcidBase(httpPort), conf0)
 import Data.List (transpose)
 import qualified Data.Map as M (fromList)
@@ -39,17 +37,13 @@ main = do
     conf <- cmdArgs conf0
     simpleHTTP nullConf{ port = httpPort conf } $ do
         decodeBody $ defaultBodyPolicy "/tmp/" 32000 1000 1000
-        let f = form0 (Just $ M.fromList [("H2O", 55),
-                                          ("H2PO4" :: String, 1.15e-3 :: Double),
-                                          ("HPO4", 8.06e-3)],
-                       Just charge,
-                       Just kAs)
+        let f = form0 defaultProblem
         (v, r) <- runForm "" f
         case (v,r) of
             (_, Nothing) -> ok . toResponse $ viewForm v
-            (_, Just (a,b,c)) -> ok . toResponse $ do
+            (_, Just problem) -> ok . toResponse $ do
                 viewForm v
-                H.toMarkup $ case map (ppKaEq c) $ zipWith (,) [1 .. ] $ kaEqs b c a of
+                H.toMarkup $ case map (ppKaEq problem) (solve problem) of
                     [] -> X.p X.<< ("no solution!"::String)
                     xs @ (_:_) -> X.simpleTable [] [] $
                         zipWith (:) (fst (head xs)) $ transpose (map snd xs)

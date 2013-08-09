@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE Rank2Types #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
@@ -6,24 +8,23 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 module Form 
     ( viewForm
-    , c0Form
-    , chargeForm
-    , form0
-    , kaForm
-    ) where
+    , form0) where
 
-
-import AcidBase.Charge (charge)
-import AcidBase.KAs (kAs)
-import Control.Applicative ((<$>), Applicative((<*>)))
-import qualified Data.Map as M (singleton)
+import AcidBase.Solve
+import AcidBase.Data (charge, kAs)
+import Control.Applicative
+import qualified Data.Map as M (singleton, Map)
 import Form.Parsers (chargeToStr, compToStr, kAsToStr, strToCharge, strToComp, strTokAs)
 import Form.Parsers.Internal (parsersToF)
 import qualified Text.Blaze.Html5 as H (h1, p, table, td, th, tr)
 import Text.Digestive.Blaze.Html5 (childErrorList, form, inputSubmit, inputTextArea)
-import Text.Digestive.Form ((.:))
+import Text.Digestive.Form -- ((.:))
 import Text.Trifecta hiding (string, string, string, string, string)
+import Control.Lens
 
+import Data.Text (Text)
+import Text.Digestive.Form.Internal (FormTree)
+import Data.Monoid
 
 viewForm v = form v "/" $ do
     H.h1 "Acid-Base equilibrium calculator"
@@ -62,15 +63,36 @@ viewForm v = form v "/" $ do
     inputSubmit "submit"
 
 
-c0Form = parsersToF strToComp compToStr (M.singleton (""::String) (1.0::Double))
+form0 x = runLF x (pure x)
+    $ lf "comp" (parsersToF strToComp compToStr) problem_initialConcentration
+    <> lf "charge" (parsersToF strToCharge chargeToStr) problem_ionCharge
+    <> lf "eq" (parsersToF strTokAs kAsToStr) problem_equilibrium
+
+runLF x x' lf = ($ x) <$> unLF lf x'
+
+newtype LF f v m a = LF { unLF :: f a -> Form v m (a -> a) }
+instance (Monad m, Monoid v) => Monoid (LF f v m a) where
+    mempty = LF $ \_ -> pure id
+    mappend (LF a) (LF b) = LF $ \x -> (\f g -> f . g) <$> a x <*> b x
+
+lf :: (Functor f, Monad m)
+    => Text -- ^ label
+    -> (f b  -> Form v m b) -- ^ formlet taking an initial values
+    -> Lens' a b -- ^ gets the @b@ out of the @a@
+    -> LF f v m a
+lf n x l1 = LF $ \y -> lform n x l1 y
+
+lform :: (Functor f, Monad m)
+    => Text -- ^ label
+    -> (f b  -> Form v m b) -- ^ formlet taking an initial values
+    -> Lens' a b -- ^ gets the @b@ out of the @a@
+    -> f a -- ^ initial value
+    -> Form v m (a -> a)
+lform n x l1 y = (l1 .~ ) <$> (n .: x (fmap (^. l1) y))
 
 
-chargeForm = parsersToF strToCharge chargeToStr charge
 
 
-form0 (a,b,c) = (,,) <$> "comp" .: c0Form a <*> "charge" .: chargeForm b <*> "eq" .: kaForm c
-
-kaForm = parsersToF strTokAs kAsToStr kAs
 
 
 

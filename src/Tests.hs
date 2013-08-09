@@ -10,8 +10,7 @@ module Tests
     , testAHA
     ) where
 
-import AcidBase.Charge (charge)
-import AcidBase.KAs (kAs)
+import AcidBase.Data (charge, kAs)
 import Data.Monoid (Monoid(mempty))
 import Form.Parsers (chargeToStr, kAsToStr, strToCharge, strTokAs)
 import Main.Aha (aha)

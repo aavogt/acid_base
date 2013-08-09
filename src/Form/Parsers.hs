@@ -28,7 +28,7 @@ compToStr = unlines . map (\(a,b) -> printf "%s\t%.3g" a b) . M.toList
 
 kAsToStr = unlines . map (\((a,b),c) -> printf "%s\t%s\t%.3g" a b (-logBase 10 c)) . M.toList
 
-strToCharge = M.fromList <$> many (liftA2 (,) compoundName integer)
+strToCharge = M.fromList <$> many (liftA2 (,) compoundName (fmap fromIntegral integer))
 
 
 strToComp = M.fromList <$> many (liftA2 (,) compoundName double)

@@ -1,12 +1,30 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE RankNTypes #-}
-module AcidBase.Internal.Rejoins (rejoins
+module AcidBase.Internal (collect'
+,rejoins
+,species
 ) where
 
-import qualified Data.Map as M (delete, fromList, insert, lookup, toList)
+
+
+import Control.Applicative ((<$>))
+import Data.List (unfoldr)
+import qualified Data.Map as M (delete, elemAt, fromList, insert, keys, lookup, Map, size, toList)
 import Data.Maybe (mapMaybe)
-import qualified Data.Sequence as S ((<|), (><), Seq, viewl, ViewL((:<)), viewr, ViewR((:>)))
+import qualified Data.Sequence as S ((<|), (><), Seq, unfoldr, viewl, ViewL((:<)), viewr, ViewR((:>)))
+
+
+collect' :: Ord a => M.Map a a -> [S.Seq a]
+collect' = unfoldr step
+    where
+    step m
+        | M.size m == 0 = Nothing
+        | (e0, _ ) <- M.elemAt 0 m,
+          s <- e0 S.<| S.unfoldr (\e -> dup <$> M.lookup e m) e0,
+          m <- M.delete e0 m = Just (s, m)
+    dup x = (x,x)
+
 
 -- | connects the sequences whose ends are the same element.
 -- For example:
@@ -28,3 +46,8 @@ rejoins xs = g ls0 xs
         | a S.:< as <- S.viewl x = g (M.insert a as ls) xs
         | otherwise = g ls xs
     g ls _ = map (\(x,xs) -> x S.<| xs) $ M.toList ls
+
+
+
+species = rejoins . collect' . M.fromList . M.keys
+
