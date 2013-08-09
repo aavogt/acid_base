@@ -7,17 +7,15 @@ module Form.Parsers.Internal
 
 
 
+import Aha (aha)
 import Control.Applicative ((<$>), Applicative((<*)))
 import Control.Monad.Trans (MonadIO(liftIO))
 import Data.Monoid (Monoid(mempty))
-import Main.Aha (aha)
 import qualified Text.Blaze.Html5 as H (ToMarkup(preEscapedToMarkup))
 import Text.Digestive.Form (string, validateM)
 import Text.Digestive.Types (Result(Error, Success))
 import Text.Trifecta (noneOf, parseString, Result(Failure, Success), some, whiteSpace)
 import Text.Trifecta hiding (string, string, string)
-
-import Data.Maybe
 
 
 parsersToF from to x = validateM (liftIO . parse2 from) (string (fmap to x))

@@ -4,7 +4,6 @@ module Conf
     , AcidBase(AcidBase, httpPort)
     ) where
 import System.Console.CmdArgs (Data, Typeable)
-import Text.Trifecta hiding (string, string)
 
 
 conf0 = AcidBase { httpPort = 8000 }

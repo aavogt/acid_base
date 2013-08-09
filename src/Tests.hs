@@ -6,9 +6,9 @@ module Tests
     ) where
 
 import AcidBase.Data (charge, kAs)
+import Aha (aha)
 import Data.Monoid (Monoid(mempty))
 import Form.Parsers (chargeToStr, kAsToStr, strToCharge, strTokAs)
-import Main.Aha (aha)
 import System.Process (readProcess)
 import Text.Trifecta (parseString)
 import Text.Trifecta hiding (string, string, string)
