@@ -1,11 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE RankNTypes #-}
-module AcidBase.Solve -- (-- solve ,
- where
+module AcidBase.Solve where
 
 import AcidBase.Internal (species)
 import AcidBase.Internal.Davies (davies)
