@@ -3,13 +3,12 @@
 
 name:                acid-base
 version:             0.1.0.0
--- synopsis:            
+synopsis:            calculate acid-base equilibria
 -- description:         
 license:             BSD3
 license-file:        LICENSE
 author:              Adam Vogt <vogt.adam@gmail.com>
 maintainer:          Adam Vogt <vogt.adam@gmail.com>
--- copyright:           
 category:            Web
 build-type:          Simple
 cabal-version:       >=1.8
@@ -18,27 +17,19 @@ executable acid_base
   main-is:             Main.hs
   hs-source-dirs:      src
 
-  other-modules:       Tests
-
-                       Conf
-
-                       Main.PpKaEq
-                       Main.Aha
-                       Main.Instances
-
-                       Form
-                       Form.Parsers
-                       Form.Parsers.Internal
-
-                       AcidBase.KAs
-                       AcidBase.KaEqs
-                       AcidBase.Internal.Rejoins
-                       AcidBase.Internal.Davies
-                       AcidBase.Internal.Collect
-                       AcidBase.Internal.KaEqs
-                       AcidBase.Internal.Test
-                       AcidBase.Species
-                       AcidBase.Charge
+  other-modules:        Main.PpKaEq
+                        Main.Aha
+                        Main.Instances
+                        Tests
+                        Conf
+                        AcidBase.Solve
+                        AcidBase.Data
+                        AcidBase.Internal.Davies
+                        AcidBase.Internal
+                        AcidBase.Test
+                        Form
+                        Form.Parsers.Internal
+                        Form.Parsers
 
   build-depends:       base ==4.6.*,
                        hmatrix ==0.15.*,
