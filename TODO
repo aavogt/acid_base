@@ -1,0 +1,24 @@
+
+== Interface ==
+what prints 7?
+
+fancy ajax (update on type like hoogle)
+
+client side? ghcjs would be interesting, but the numerical stuff would have to
+be replaced then
+
+
+== Backend ==
+other models, for example following
+<http://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/>.
+
+adapt calculations done for zinc electrowinning currently in pitzer/
+
+temperature dependency of parameters, solubility (simplex type of algorithm to
+find which solids are present? Is this also DCP?), calculate other physical
+properties (density etc.)
+
+propagate uncertainty
+
+
+
