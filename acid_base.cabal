@@ -33,7 +33,7 @@ executable acid_base
   hs-source-dirs:      src
 
   other-modules:        Main.PpKaEq
-                        Main.Aha
+                        Aha
                         Main.Instances
                         Tests
                         Conf
