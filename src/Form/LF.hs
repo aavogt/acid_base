@@ -42,16 +42,18 @@ newtype LF f v m a = LF { unLF :: f a -> Form v m (a -> a) }
 
 instance (Monad m, Monoid v) => Monoid (LF f v m a) where
     mempty = LF $ \_ -> pure id
-    mappend (LF a) (LF b) = LF $ \x -> (\f g -> f . g) <$> a x <*> b x
 
-lf :: (Functor f, Monad m)
+instance (Monad m, Monoid v) => Semigroup (LF f v m a) where
+    LF a <> LF b = LF $ \x -> (\f g -> f . g) <$> a x <*> b x
+
+lf :: (Functor f, Monad m, Monoid v)
     => Text -- ^ label
     -> (f b  -> Form v m b) -- ^ formlet taking an initial values
     -> Lens' a b -- ^ gets the @b@ out of the @a@
     -> LF f v m a
 lf n x l1 = LF $ \y -> lform n x l1 y
 
-lform :: (Functor f, Monad m)
+lform :: (Functor f, Monoid v, Monad m)
     => Text -- ^ label
     -> (f b  -> Form v m b) -- ^ formlet taking an initial values
     -> Lens' a b -- ^ gets the @b@ out of the @a@

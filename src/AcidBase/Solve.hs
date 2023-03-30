@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE FlexibleContexts #-}
 module AcidBase.Solve where
 
 import AcidBase.Internal (species)
@@ -11,11 +12,10 @@ import Data.List (unfoldr)
 import qualified Data.Map as M
 import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Monoid ((<>))
-import Data.Packed.Matrix (asColumn, flatten, fromRows)
-import Data.Packed.Vector ((@>), fromList)
+import Numeric.LinearAlgebra (asColumn, flatten, fromRows, linearSolve)
+import Numeric.LinearAlgebra.Data (fromList, (!))
 import qualified Data.Sequence as S (index, length)
 import Numeric.GSL.Root (uniRoot, UniRootMethod(Bisection))
-import Numeric.LinearAlgebra.LAPACK (linearSolveR)
 
 import Control.Lens
 
@@ -99,11 +99,11 @@ solve1h
     p @ Problem { _problem_ionCharge = charge, _problem_equilibrium = kAs,
               _problem_initialConcentration = input } h =
   let
-    en = (F.sum $ M.mapWithKey (\s i -> maybe 0 (\c-> fromIntegral c*(soln @> i)) (M.lookup s charge)) sm)
+    en = (F.sum $ M.mapWithKey (\s i -> maybe 0 (\c-> fromIntegral c*(soln ! i)) (M.lookup s charge)) sm)
             + h - spectatorCharges
 
 
-    i2 = ((F.sum $ M.mapWithKey (\s i -> maybe 0 (\c-> (fromIntegral c)^2 *(soln @> i))
+    i2 = ((F.sum $ M.mapWithKey (\s i -> maybe 0 (\c-> (fromIntegral c)^2 *(soln ! i))
                     (M.lookup s charge)) sm)
             + h + spectatorI) / 2
 
@@ -114,9 +114,9 @@ solve1h
     matrix = fromRows ( mbalLhs ++ keqLhs )
     rhs = fromList $ mbalRhs <> keqRhs
 
-    soln = flatten $ linearSolveR matrix (asColumn rhs)
+    soln = maybe (1/0) flatten $ linearSolve matrix (asColumn rhs)
 
-    solnMap = M.insert "H" h $ M.map (soln @>) sm
+    solnMap = M.insert "H" h $ M.map (soln !) sm
 
     validSpecies = filter (F.any (`M.member` input)) $ species kAs
 
